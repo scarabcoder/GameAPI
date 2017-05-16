@@ -1,5 +1,9 @@
 package com.scarabcoder.gameapi.game;
 
+import org.bukkit.Location;
+
+import com.scarabcoder.gameapi.enums.PlayerJoinLimitAction;
+
 public class GameSettings {
 	
 	private int minPlayers = 2;
@@ -8,7 +12,10 @@ public class GameSettings {
 	private int teamSize = 2;
 	private boolean setMOTD = false;
 	private boolean setListPlayerCount = false;
-	private boolean ignorePlayerLimit = false;
+	private boolean enableBungee = false;
+	private Location lobbySpawn;
+	private String lobbyServer;
+	private PlayerJoinLimitAction limitAction = PlayerJoinLimitAction.DISALLOW;
 	
 	public GameSettings(){
 		
@@ -24,15 +31,49 @@ public class GameSettings {
 		this.teamSize = 2;
 		this.setMOTD = false;
 		this.setListPlayerCount = false;
-		this.ignorePlayerLimit = false;
+		this.limitAction = PlayerJoinLimitAction.DISALLOW;
 	}
 	
-	public boolean shouldIgnorePlayerLimit(){
-		return this.ignorePlayerLimit;
+	
+	
+	/**
+	 * Get whether or not the game uses Bungee servers.
+	 * @return Bungee enabled
+	 */
+	public boolean usesBungee(){
+		return this.enableBungee;
 	}
 	
-	public void shouldIgnorePlayerLimit(boolean shouldIgnore){
-		this.ignorePlayerLimit = shouldIgnore;
+	/**
+	 * Set whether or not the game should use Bungee servers.
+	 * @param bungee boolean.
+	 */
+	public void setUsesBungee(boolean bungee){
+		this.enableBungee = bungee;
+	}
+	
+	/**
+	 * Set the lobby location. Only used if bungee mode is disabled.
+	 * @param location
+	 */
+	public void setLobbyLocation(Location location){
+		this.lobbySpawn = location;
+	}
+	
+	/**
+	 * Set the lobby server that the player should be sent to on game end/leave. Only used if bungee mode is enabled.
+	 * @param server
+	 */
+	public void setLobbyServer(String server){
+		this.lobbyServer = server;
+	}
+	
+	public Location getLobbyLocation(){
+		return this.lobbySpawn;
+	}
+	
+	public String getLobbyServer(){
+		return this.lobbyServer;
 	}
 	
 	/**
@@ -79,11 +120,15 @@ public class GameSettings {
 	
 	/**
 	 * Get the maximum amount of players that can join a game.
-	 * You can define what happens when a player attempts to join when the limit is filled with GameSettings.setLimitedPlayerJoinAction().
+	 * You can define what happens when a player attempts to join when the limit is filled with GameSettings.getLimitedPlayerJoinAction().
 	 * @return int max players.
 	 */
 	public int getMaximumPlayers(){
 		return maxPlayers;
+	}
+	
+	public PlayerJoinLimitAction getLimitedPlayerJoinAction(){
+		return this.limitAction ;
 	}
 	
 	/**

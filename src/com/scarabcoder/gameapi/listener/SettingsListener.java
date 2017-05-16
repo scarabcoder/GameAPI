@@ -26,7 +26,6 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 
@@ -259,13 +258,6 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
-	@EventHandler
-	public void vehiclePlace(VehicleCreateEvent e){
-		ArenaSettings settings = ArenaManager.getActiveSettings(e.getVehicle().getLocation());
-		if(settings != null){
-			if(!settings.canVehiclePlacement()) e.setCancelled(true);
-		}
-	}
 	
 	@EventHandler
 	public void blockPlace(BlockPlaceEvent e){

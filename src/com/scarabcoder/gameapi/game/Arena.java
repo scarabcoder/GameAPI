@@ -28,6 +28,10 @@ public class Arena {
 		this.saveDefault();
 	}
 	
+	public String getName(){
+		return this.id;
+	}
+	
 	/**
 	 * Get the global ArenaSettings for this arena.
 	 * @return ArenaSettings

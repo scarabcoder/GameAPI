@@ -1,18 +1,23 @@
 package com.scarabcoder.gameapi.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import com.scarabcoder.gameapi.util.LocationUtil;
 
 public class GamePlayer {
 	
-	private Player player;
+	private OfflinePlayer player;
 	
 	private Team team;
 	
 	private Game game;
 	
-	public GamePlayer(Player player){
+	public GamePlayer(OfflinePlayer player){
 		this.player = player;
 	}
 	
@@ -27,11 +32,28 @@ public class GamePlayer {
 	
 	
 	/**
-	 * Get the Bukkit player.
-	 * @return Player
+	 * Get the Bukkit (offline) player.
+	 * For the online player, use getOnlinePlayer(). Make sure you check if the player is online with isOnline()!
+	 * @return OfflinePlayer
 	 */
-	public Player getPlayer(){
+	public OfflinePlayer getPlayer(){
 		return player;
+	}
+	
+	/**
+	 * Get the online Bukkit Player.
+	 * @return Player if online, null if otherwise.
+	 */
+	public Player getOnlinePlayer(){
+		return player.getPlayer();
+	}
+	
+	/**
+	 * Checks whether or not the player is online.
+	 * @return boolean online
+	 */
+	public boolean isOnline(){
+		return getOnlinePlayer() != null;
 	}
 	
 	/**
@@ -68,10 +90,18 @@ public class GamePlayer {
 	
 	/**
 	 * Get the list of areas this player is in. 
-	 * @return List<Area> of areas. Only null if the player is not in a game.
+	 * @return List<Area> of areas. Only null if the player is not in a game, or is offline.
 	 */
 	public List<Area> getAreas(){
-		return null;
+		if(!this.isInGame()) return null;
+		if(!this.isOnline()) return null;
+		List<Area> areas = new ArrayList<Area>();
+		for(Area area : this.getGame().getAreas()){
+			if(LocationUtil.isInArea(this.getOnlinePlayer().getLocation(), area.getLocation1(), area.getLocation2()))
+				areas.add(area);
+			
+		}
+		return areas;
 	}
 	
 }
