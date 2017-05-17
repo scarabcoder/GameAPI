@@ -1,24 +1,33 @@
 package com.scarabcoder.gameapi.game;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 
 import com.scarabcoder.gameapi.enums.PlayerJoinLimitAction;
+import com.scarabcoder.gameapi.enums.TeamSpreadType;
 
 public class GameSettings {
 	
-	private int minPlayers = 2;
-	private int maxPlayers = 8;
-	private int countdownTimer = 60;
-	private int teamSize = 2;
-	private boolean setMOTD = false;
-	private boolean setListPlayerCount = false;
-	private boolean enableBungee = false;
+	private int minPlayers;
+	private int maxPlayers;
+	private int countdownTimer;
+	private int teamSize;
+	private boolean setMOTD;
+	private boolean setListPlayerCount;
+	private boolean enableBungee;
 	private Location lobbySpawn;
 	private String lobbyServer;
-	private PlayerJoinLimitAction limitAction = PlayerJoinLimitAction.DISALLOW;
+	private PlayerJoinLimitAction limitAction;
+	private boolean shouldLeavePlayerOnDisconnect;
+	private boolean useTeams;
+	private TeamSpreadType spreadType;
+	private GameMode mode;
+	private GameMode spectatorMode;
+	private boolean teleportPlayersOnGameStart;
+	private boolean automaticCountdown;
 	
 	public GameSettings(){
-		
+		loadDefaults();
 	}
 	
 	/**
@@ -28,13 +37,131 @@ public class GameSettings {
 		this.minPlayers = 2;
 		this.maxPlayers = 8;
 		this.countdownTimer = 60;
-		this.teamSize = 2;
+		this.teamSize = 1;
 		this.setMOTD = false;
 		this.setListPlayerCount = false;
 		this.limitAction = PlayerJoinLimitAction.DISALLOW;
+		this.shouldLeavePlayerOnDisconnect = true;
+		this.useTeams = false;
+		this.spreadType = TeamSpreadType.EVEN;
+		this.mode = GameMode.SURVIVAL;
+		this.spectatorMode = GameMode.SPECTATOR;
+		this.setTeleportPlayersOnGameStart(true);
+		this.setAutomaticCountdown(true);
+	}
+	
+	/**
+	 * Get whether or not the countdown should start when the minimum players required are filled.
+	 * @return
+	 */
+	public boolean getAutomaticCountdown() {
+		return automaticCountdown;
+	}
+	
+	/**
+	 * Set whether or not the countdown should start when the minimum players required are filled.
+	 * @param automaticCountdown
+	 */
+	public void setAutomaticCountdown(boolean automaticCountdown) {
+		this.automaticCountdown = automaticCountdown;
+	}
+
+	/**
+	 * Whether or not players should be teleported to team spawns or game spawns on game start.
+	 * @return
+	 */
+	public boolean shouldTeleportPlayersOnGameStart() {
+		return teleportPlayersOnGameStart;
+	}
+	
+	/**
+	 * Set whether or not players should be teleported to team spawns or game spawns on game start.
+	 * @param teleportPlayersOnGameStart
+	 */
+	public void setTeleportPlayersOnGameStart(boolean teleportPlayersOnGameStart) {
+		this.teleportPlayersOnGameStart = teleportPlayersOnGameStart;
+	}
+
+	/**
+	 * Get the Minecraft GameMode that players should be in while playing the game.
+	 * @return
+	 */
+	public GameMode getMode() {
+		return mode;
 	}
 	
 	
+	/**
+	 * Set the Minecraft GameMode that players should be in while playing the game.
+	 * @param mode
+	 */
+	public void setMode(GameMode mode) {
+		this.mode = mode;
+	}
+	
+	/**
+	 * Get the Minecraft GameMode that spectators should be in while playing the game.
+	 * @return
+	 */
+	public GameMode getSpectatorMode() {
+		return spectatorMode;
+	}
+
+	/**
+	 * Set the Minecraft GameMode that spectators should be in while playing the game.
+	 * @param spectatorMode
+	 */
+	public void setSpectatorMode(GameMode spectatorMode) {
+		this.spectatorMode = spectatorMode;
+	}
+
+	/**
+	 * Get the team spread type. See TeamSpreadType.EVEN and TeamSpreadType.FIRST_AVAILABLE for more info.
+	 * @return Team spread type.
+	 */
+	public TeamSpreadType getTeamSpreadType(){
+		return this.spreadType;
+	}
+	
+	/**
+	 * Set the team spread type. See TeamSpreadType.EVEN and TeamSpreadType.FIRST_AVAILABLE for more info.
+	 * @param type
+	 */
+	public void setTeamSpreadType(TeamSpreadType type){
+		this.spreadType = type;
+	}
+	
+	/**
+	 * Whether or not teams are enabled. If enabled, players will automatically be added to an available team, sorted via the set TeamSpreadType.
+	 * @return boolean
+	 */
+	public boolean shouldUseTeams(){
+		return this.useTeams;
+	}
+	
+	/**
+	 * Set whether or not teams are enabled. If enabled, players will automatically be added to an available team, sorted via the set TeamSpreadType.
+	 * @param should
+	 */
+	public void shouldUseTeams(boolean should){
+		this.useTeams = should;
+	}
+	
+	/**
+	 * Whether or not the player should be removed from the game when they disconnect from the server.
+	 * @return
+	 */
+	public boolean shouldLeavePlayerOnDisconnect(){
+		return this.shouldLeavePlayerOnDisconnect;
+	}
+	
+	/**
+	 * Set whether or not the player should be removed from the game when they disconnect from the server.
+	 * @param should
+	 */
+	public void shouldLeavePlayerOnDisconnect(boolean should){
+		this.shouldLeavePlayerOnDisconnect = should;
+	}
 	
 	/**
 	 * Get whether or not the game uses Bungee servers.

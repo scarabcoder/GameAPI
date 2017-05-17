@@ -15,9 +15,12 @@ public class Area {
 	
 	private String name;
 	
+	private boolean useSettings;
+	
 	/**
 	 * Define an area to make checking for certain events easier.
-	 * You can also define areas to have their own settings (Area.inheritSettingsFromGame() and Area.getSettings())
+	 * You can also define areas to have their own settings (Area.getSettings()). 
+	 * Area settings will not take effect unless useSettings() is set to true.
 	 * Loc1 and loc2 will be re-written so that loc1 is always the "lowest" position, and loc2 to be the "highest"
 	 * 
 	 * @param loc1 First corner of the area
@@ -38,8 +41,16 @@ public class Area {
 		this.loc2 = new Location(loc2.getWorld(), x2, y2, z2);
 		this.name = name;
 		this.settings = new ArenaSettings();
+		this.useSettings = false;
 	}
 	
+	public boolean useSettings(){
+		return this.useSettings;
+	}
+	
+	public void useSettings(boolean use){
+		this.useSettings = use;
+	}
 	
 	/**
 	 * Checks whether or not a player is in the area.

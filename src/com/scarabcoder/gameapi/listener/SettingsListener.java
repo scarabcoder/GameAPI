@@ -1,5 +1,7 @@
 package com.scarabcoder.gameapi.listener;
 
+import java.util.Random;
+
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -23,15 +25,21 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 
 import com.scarabcoder.gameapi.game.ArenaSettings;
+import com.scarabcoder.gameapi.game.Game;
 import com.scarabcoder.gameapi.game.GamePlayer;
+import com.scarabcoder.gameapi.game.Team;
 import com.scarabcoder.gameapi.manager.ArenaManager;
 import com.scarabcoder.gameapi.manager.PlayerManager;
 
@@ -282,6 +290,54 @@ public class SettingsListener implements Listener{
 		ArenaSettings settings = ArenaManager.getActiveSettings(PlayerManager.getGamePlayer(e.getPlayer()));
 		if(settings != null){
 			if(!settings.isCanDestroy()) e.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onFoodchange(FoodLevelChangeEvent e){
+		GamePlayer player = PlayerManager.getGamePlayer((Player)e.getEntity());
+		ArenaSettings settings = ArenaManager.getActiveSettings(player);
+		if(settings != null){
+			if(!settings.isAllowFoodLevelChange()){
+				e.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void playerDeath(PlayerDeathEvent e){
+		GamePlayer player = PlayerManager.getGamePlayer(e.getEntity());
+		ArenaSettings settings = ArenaManager.getActiveSettings(player);
+		if(settings != null){
+			if(!settings.isKeepInventory()){
+				e.setKeepInventory(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onItemDurabilityChange(PlayerItemDamageEvent e){
+		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
+		ArenaSettings settings = ArenaManager.getActiveSettings(player);
+		if(settings != null){
+			e.setCancelled(!settings.isAllowDurabilityChange());
+		}
+	}
+	
+	@EventHandler
+	public void playerRespawn(PlayerRespawnEvent e){
+		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
+		if(player.isOnline()){
+			Game game = player.getGame();
+			if(game.getGameSettings().shouldUseTeams()){
+				if(player.getTeam() != null){
+					for(Team team : game.getTeamManager().getTeams()){
+						player.getOnlinePlayer().teleport(team.getTeamSpawns().get(new Random().nextInt(team.getTeamSpawns().size())));
+					}
+				}
+			}
+			
+			return;
 		}
 	}
 	

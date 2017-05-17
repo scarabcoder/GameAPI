@@ -17,4 +17,8 @@ public class TeamManager {
 		this.teams.add(team);
 	}
 	
+	public List<Team> getTeams(){
+		return this.teams;
+	}
+	
 }

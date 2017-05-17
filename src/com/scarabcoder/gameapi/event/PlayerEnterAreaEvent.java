@@ -8,7 +8,8 @@ public class PlayerEnterAreaEvent extends AreaEvent {
 	public PlayerEnterAreaEvent(GamePlayer player, Area area) {
 		super(player, area);
 	}
-
+	
+	
 	
 	
 }

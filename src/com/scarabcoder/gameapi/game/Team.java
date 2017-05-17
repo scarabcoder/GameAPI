@@ -1,9 +1,11 @@
 package com.scarabcoder.gameapi.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.scarabcoder.gameapi.util.ColorUtil;
@@ -16,19 +18,29 @@ public class Team {
 	private String name;
 	private DyeColor color;
 	private ChatColor chatColor;
-	
+	private List<Location> teamSpawns;
 	
 	public Team(DyeColor color, String name){
 		this.color = color;
 		this.name = name;
 		this.chatColor = ColorUtil.dyeColorToChatColor(color);
+		this.teamSpawns = new ArrayList<Location>();
 	}
 	
 	public Team(DyeColor dyeColor, ChatColor chatColor, String name){
 		this.color = dyeColor;
 		this.name = name;
 		this.chatColor = chatColor;
+		this.teamSpawns = new ArrayList<Location>();
 		
+	}
+	
+	public List<Location> getTeamSpawns(){
+		return this.teamSpawns;
+	}
+	
+	public void addTeamSpawn(Location location){
+		this.teamSpawns.add(location);
 	}
 	
 	public DyeColor getDyeColor(){
@@ -59,14 +71,6 @@ public class Team {
 		this.allowTeamDamage = allow;
 	}
 	
-	/**
-	 * Add a player to the team. Players can be on multiple teams, though it isn't recommended.
-	 * @param p The Bukkit Player player to be added.
-	 */
-	public void addPlayer(Player p){
-		players.add(new GamePlayer(p));
-	}
-	
 	
 	/**
 	 * Add a player to the team. Players can be on multiple teams, though it isn't recommended.
@@ -74,6 +78,7 @@ public class Team {
 	 */
 	public void addPlayer(GamePlayer p){
 		players.add(p);
+		p.setTeam(this);
 	}
 	
 	/**

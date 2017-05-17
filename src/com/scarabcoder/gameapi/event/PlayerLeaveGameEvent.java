@@ -1,6 +1,5 @@
 package com.scarabcoder.gameapi.event;
 
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredListener;
@@ -8,41 +7,23 @@ import org.bukkit.plugin.RegisteredListener;
 import com.scarabcoder.gameapi.game.Game;
 import com.scarabcoder.gameapi.game.GamePlayer;
 
-public class PlayerDamagePlayerEvent extends Event implements Cancellable {
-	
-	private boolean cancelled = false;
+public class PlayerLeaveGameEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 	
-	private GamePlayer damager;
-	private GamePlayer damaged;
+	private GamePlayer player;
 	private Game game;
 	
-	public PlayerDamagePlayerEvent(GamePlayer damager, GamePlayer damaged, Game game){
-		this.damaged = damaged;
-		this.damager = damager;
+	public PlayerLeaveGameEvent(GamePlayer player, Game game){
+		this.player = player;
 		this.game = game;
 	}
 	
-	public GamePlayer getDamager(){
-		return this.damager;
-	}
-	
-	public GamePlayer getDamaged(){
-		return this.damaged;
+	public GamePlayer getPlayer(){
+		return this.player;
 	}
 	
 	public Game getGame(){
 		return this.game;
-	}
-
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
-
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
 	}
 
 	@Override
@@ -58,7 +39,4 @@ public class PlayerDamagePlayerEvent extends Event implements Cancellable {
 	public static HandlerList getHandlerList(){
 		return handlers;
 	}
-	
-	
-	
 }

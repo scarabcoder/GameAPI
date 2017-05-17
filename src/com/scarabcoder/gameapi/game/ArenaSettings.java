@@ -39,6 +39,9 @@ public class ArenaSettings {
 	private boolean allowMyceliumSpread;
 	private boolean allowVineGrowth;
 	private boolean allowPlayerInvincibility;
+	private boolean allowFoodLevelChange;
+	private boolean keepInventory;
+	private boolean allowDurabilityChange;
 	
 	private int priority;
 
@@ -124,6 +127,9 @@ public class ArenaSettings {
 		this.canBuild = true;
 		this.canDestroy = true;
 		this.canPvP = true;
+		this.allowFoodLevelChange = true;
+		this.keepInventory = false;
+		this.allowDurabilityChange = true;
 	}
 
 	public boolean isCanBuild() {
@@ -420,6 +426,30 @@ public class ArenaSettings {
 
 	public void setAllowPlayerInvincibility(boolean allowPlayerInvincibility) {
 		this.allowPlayerInvincibility = allowPlayerInvincibility;
+	}
+
+	public boolean isAllowFoodLevelChange() {
+		return allowFoodLevelChange;
+	}
+
+	public void setAllowFoodLevelChange(boolean allowFoodLevelChange) {
+		this.allowFoodLevelChange = allowFoodLevelChange;
+	}
+
+	public boolean isKeepInventory() {
+		return keepInventory;
+	}
+
+	public void setKeepInventory(boolean keepInventory) {
+		this.keepInventory = keepInventory;
+	}
+
+	public boolean isAllowDurabilityChange() {
+		return allowDurabilityChange;
+	}
+
+	public void setAllowDurabilityChange(boolean allowDurabilityChange) {
+		this.allowDurabilityChange = allowDurabilityChange;
 	}
 	
 }

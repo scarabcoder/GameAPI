@@ -63,11 +63,12 @@ public class GameAPI extends JavaPlugin {
 	}
 	
 	public static void logInfo(String msg){
-		System.out.println("[GameAPI] " + msg);
+		System.out.println("[GameAPI] [INFO] " + msg);
 	}
 	
-	public static void sendDebugMessage(String message){
-		if(GameAPI.debugMode()) System.out.println("[GameAPI] " + message);
+	public static void sendDebugMessage(String message, Plugin plugin){
+		if(GameAPI.debugMode()) System.out.println("[GameAPI]" + (plugin.getName().equals("GameAPI") ? "" : " [" + plugin.getName() + "]") + " [DEBUG] " + message);
 	}
+	
 	
 }

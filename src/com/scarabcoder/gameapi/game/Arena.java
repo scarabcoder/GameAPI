@@ -94,12 +94,15 @@ public class Arena {
 	 * Saves current world as the default, used when resetting the world.
 	 */
 	public void saveDefault(){
+		GameAPI.sendDebugMessage("Saving default world for " + this.getWorld().getName() + "...", GameAPI.getPlugin());
 		File worldFolder = world.getWorldFolder();
 		try {
 			File dest = new File(GameAPI.getGameWorldsFolder(), this.world.getName());
 			if(dest.exists()){
+				GameAPI.sendDebugMessage("Deleting existing default world " + this.getWorld().getName() + "...", GameAPI.getPlugin());
 				FileUtils.deleteDirectory(dest);
 			}
+			GameAPI.sendDebugMessage("Copying world " + this.getWorld().getName() + " to defaults folder...", GameAPI.getPlugin());
 			FileUtils.copyDirectory(worldFolder, new File(GameAPI.getGameWorldsFolder(), this.world.getName()));
 			
 		} catch (IOException e) {
@@ -111,20 +114,20 @@ public class Arena {
 	 * Players should NOT be in the world. As a precaution against world corruption, any players in the world are kicked from the server.
 	 */
 	public void resetWorld(){
-		GameAPI.sendDebugMessage("Resetting arena world " + this.getWorld().getName() + "!");
+		GameAPI.sendDebugMessage("Resetting arena world " + this.getWorld().getName() + "!", GameAPI.getPlugin());
 		File worldFolder = world.getWorldFolder();
 		String worldName = world.getName();
 		for(Player player : this.getWorld().getPlayers()){
 			player.kickPlayer("World resetting...");
 		}
-		GameAPI.sendDebugMessage("Unloading world " + worldName + "...");
+		GameAPI.sendDebugMessage("Unloading world " + worldName + "...", GameAPI.getPlugin());
 		Bukkit.unloadWorld(worldName, false);
 		try {
-			GameAPI.sendDebugMessage("Deleting world " + worldName + "...");
+			GameAPI.sendDebugMessage("Deleting world " + worldName + "...", GameAPI.getPlugin());
 			FileUtils.deleteDirectory(worldFolder);
-			GameAPI.sendDebugMessage("Copying default world from GameWorlds/" + worldName + "...");
+			GameAPI.sendDebugMessage("Copying default world from GameWorlds/" + worldName + "...", GameAPI.getPlugin());
 			FileUtils.copyDirectory(new File(GameAPI.getGameWorldsFolder(), worldName), GameAPI.getGameWorldsFolder().getParentFile());
-			GameAPI.sendDebugMessage("Loading world " + worldName + " on server...");
+			GameAPI.sendDebugMessage("Loading world " + worldName + " on server...", GameAPI.getPlugin());
 			Bukkit.createWorld(new WorldCreator(worldName));
 		} catch (IOException e) {
 			e.printStackTrace();

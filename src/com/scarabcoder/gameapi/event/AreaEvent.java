@@ -3,6 +3,7 @@ package com.scarabcoder.gameapi.event;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.RegisteredListener;
 
 import com.scarabcoder.gameapi.game.Area;
 import com.scarabcoder.gameapi.game.GamePlayer;
@@ -40,6 +41,14 @@ public class AreaEvent extends Event implements Cancellable {
 
 	@Override
 	public HandlerList getHandlers() {
+		for(RegisteredListener listener : handlers.getRegisteredListeners()){
+			if(!listener.getPlugin().equals(player.getGame().getRegisteringPlugin())){
+				handlers.unregister(listener);
+			}
+		}
+		return handlers;
+	}
+	public static HandlerList getHandlerList(){
 		return handlers;
 	}
 

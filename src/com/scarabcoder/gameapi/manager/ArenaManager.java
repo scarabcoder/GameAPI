@@ -48,9 +48,11 @@ public class ArenaManager {
 		int topPriority = -1;
 		
 		for(Area area : player.getAreas()){
-			if(area.getSettings().getPriority() > topPriority){
-				settings = area.getSettings();
-				topPriority = area.getSettings().getPriority();
+			if(area.useSettings()){
+				if(area.getSettings().getPriority() > topPriority){
+					settings = area.getSettings();
+					topPriority = area.getSettings().getPriority();
+				}
 			}
 		}
 		
@@ -68,14 +70,16 @@ public class ArenaManager {
 		for(Game game : GameManager.getGames()){
 			if(game.getArena().getWorld().getName().equals(location.getWorld().getName())) settings.add(game.getArena().getArenaSettings());
 			for(Area area : game.getAreas()){
-				Location l1 = area.getLocation1();
-				Location l2 = area.getLocation2();
-				if(
-						location.getX() > l1.getX() && location.getX() < l2.getX() &&
-						location.getY() > l1.getY() && location.getY() < l2.getY() &&
-						location.getZ() > l1.getZ() && location.getZ() < l2.getZ()
-						){
-					settings.add(area.getSettings());
+				if(area.useSettings()){
+					Location l1 = area.getLocation1();
+					Location l2 = area.getLocation2();
+					if(
+							location.getX() > l1.getX() && location.getX() < l2.getX() &&
+							location.getY() > l1.getY() && location.getY() < l2.getY() &&
+							location.getZ() > l1.getZ() && location.getZ() < l2.getZ()
+							){
+						settings.add(area.getSettings());
+					}
 				}
 			}
 		}
