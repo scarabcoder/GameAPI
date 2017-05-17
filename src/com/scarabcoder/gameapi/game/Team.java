@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import com.scarabcoder.gameapi.util.ColorUtil;
 

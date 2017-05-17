@@ -42,6 +42,7 @@ public class ArenaSettings {
 	private boolean allowFoodLevelChange;
 	private boolean keepInventory;
 	private boolean allowDurabilityChange;
+	private boolean allowBlockDrop;
 	
 	private int priority;
 
@@ -130,6 +131,15 @@ public class ArenaSettings {
 		this.allowFoodLevelChange = true;
 		this.keepInventory = false;
 		this.allowDurabilityChange = true;
+		this.allowBlockDrop = true;
+	}
+	
+	public boolean getAllowBlockDrop(){
+		return this.allowBlockDrop;
+	}
+	
+	public void setAllowBlockDrop(boolean allow){
+		this.allowBlockDrop = allow;
 	}
 
 	public boolean isCanBuild() {

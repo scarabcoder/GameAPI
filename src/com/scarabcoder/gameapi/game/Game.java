@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
@@ -21,8 +23,6 @@ import com.scarabcoder.gameapi.event.PlayerJoinGameEvent;
 import com.scarabcoder.gameapi.event.PlayerLeaveGameEvent;
 import com.scarabcoder.gameapi.manager.PlayerManager;
 import com.scarabcoder.gameapi.manager.TeamManager;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class Game {
 	
@@ -101,6 +101,7 @@ public class Game {
 							game.resetCurrentCountdown();
 							game.setCountingDown(false);
 						}else{
+							game.sendMessage(ChatColor.RED + "Not enough players to start game.");
 							game.resetCurrentCountdown();
 							game.setCountingDown(false);
 						}
@@ -137,6 +138,16 @@ public class Game {
 	
 	public GamePlayerType getGamePlayerType(GamePlayer player){
 		return this.playerModes.get(player);
+	}
+	
+	public List<GamePlayer> getGamePlayerByMode(GamePlayerType type){
+		List<GamePlayer> players = new ArrayList<GamePlayer>();
+		for(GamePlayer player : this.getPlayers()){
+			if(this.getGamePlayerType(player).equals(type)){
+				players.add(player);
+			}
+		}
+		return players;
 	}
 	
 	public boolean isCountingDown() {
@@ -308,8 +319,14 @@ public class Game {
 			PlayerJoinGameEvent ev = new PlayerJoinGameEvent(player, this);
 			this.players.add(player);
 			player.setGame(this);
-			player.getOnlinePlayer().setGameMode(this.getGameSettings().getMode());
+			if(player.isOnline()){
+				player.getOnlinePlayer().setGameMode(this.getGameSettings().getMode());
+				player.getOnlinePlayer().setFoodLevel(this.getGameSettings().getFoodLevel());
+				player.getOnlinePlayer().setHealth(this.getGameSettings().getHealthLevel());
+			}
+			this.setPlayerMode(GamePlayerType.PLAYER, player);
 			Bukkit.getPluginManager().callEvent(ev);
+			
 		}
 	}
 	
@@ -333,6 +350,7 @@ public class Game {
 				player.getOnlinePlayer().teleport(this.getGameSettings().getLobbyLocation());
 			}
 		}
+		player.setGame(null);
 		PlayerLeaveGameEvent ev = new PlayerLeaveGameEvent(player, this);
 		Bukkit.getPluginManager().callEvent(ev);
 		

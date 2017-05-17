@@ -182,7 +182,9 @@ public class SettingsListener implements Listener{
 			}else if(e.getEntity().getType().equals(EntityType.PLAYER)){
 				GamePlayer player = PlayerManager.getGamePlayer((Player) e.getEntity());
 				ArenaSettings pSettings = ArenaManager.getActiveSettings(player);
-				if(pSettings.canPlayerInvincibility()) e.setCancelled(true);
+				if(pSettings != null){
+					if(pSettings.canPlayerInvincibility()) e.setCancelled(true);
+				}
 			}
 		}
 	}
@@ -196,6 +198,7 @@ public class SettingsListener implements Listener{
 			}
 		}
 	}
+	
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void fluidFlow(BlockFromToEvent e){
@@ -289,11 +292,17 @@ public class SettingsListener implements Listener{
 	public void blockBreak(BlockBreakEvent e){
 		ArenaSettings settings = ArenaManager.getActiveSettings(PlayerManager.getGamePlayer(e.getPlayer()));
 		if(settings != null){
-			if(!settings.isCanDestroy()) e.setCancelled(true);
+			if(!settings.isCanDestroy()){
+				e.setCancelled(true);
+			}else if(!settings.getAllowBlockDrop()){
+				e.setCancelled(true);
+				e.getBlock().setType(Material.AIR);
+			}
+			
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onFoodchange(FoodLevelChangeEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer((Player)e.getEntity());
 		ArenaSettings settings = ArenaManager.getActiveSettings(player);
@@ -304,7 +313,7 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerDeath(PlayerDeathEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer(e.getEntity());
 		ArenaSettings settings = ArenaManager.getActiveSettings(player);
@@ -315,7 +324,7 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemDurabilityChange(PlayerItemDamageEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
 		ArenaSettings settings = ArenaManager.getActiveSettings(player);
@@ -324,7 +333,7 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerRespawn(PlayerRespawnEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
 		if(player.isOnline()){

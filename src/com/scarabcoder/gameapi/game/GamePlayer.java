@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import com.scarabcoder.gameapi.enums.GamePlayerType;
 import com.scarabcoder.gameapi.util.LocationUtil;
 
 public class GamePlayer {

@@ -25,6 +25,8 @@ public class GameSettings {
 	private GameMode spectatorMode;
 	private boolean teleportPlayersOnGameStart;
 	private boolean automaticCountdown;
+	private int foodLevel;
+	private double healthLevel;
 	
 	public GameSettings(){
 		loadDefaults();
@@ -48,6 +50,8 @@ public class GameSettings {
 		this.spectatorMode = GameMode.SPECTATOR;
 		this.setTeleportPlayersOnGameStart(true);
 		this.setAutomaticCountdown(true);
+		this.foodLevel = 20;
+		this.healthLevel = 20.0d;
 	}
 	
 	/**
@@ -306,6 +310,22 @@ public class GameSettings {
 	 */
 	public void setCountdownTime(int seconds){
 		this.countdownTimer = seconds;
+	}
+
+	public int getFoodLevel() {
+		return foodLevel;
+	}
+
+	public void setFoodLevel(int foodLevel) {
+		this.foodLevel = foodLevel;
+	}
+
+	public double getHealthLevel() {
+		return healthLevel;
+	}
+
+	public void setHealthLevel(double healthLevel) {
+		this.healthLevel = healthLevel;
 	}
 	
 }
