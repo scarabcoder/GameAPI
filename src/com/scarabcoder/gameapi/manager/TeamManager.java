@@ -14,7 +14,7 @@ public class TeamManager {
 	}
 	
 	public void registerTeam(Team team){
-		
+		this.teams.add(team);
 	}
 	
 }

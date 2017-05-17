@@ -3,10 +3,10 @@ package com.scarabcoder.gameapi.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import com.scarabcoder.gameapi.enums.GamePlayerType;
 import com.scarabcoder.gameapi.util.LocationUtil;
 
 public class GamePlayer {
@@ -17,8 +17,29 @@ public class GamePlayer {
 	
 	private Game game;
 	
+	private GamePlayerType gamePlayerType;
+	
 	public GamePlayer(OfflinePlayer player){
 		this.player = player;
+		this.gamePlayerType = GamePlayerType.PLAYER;
+	}
+	
+	/**
+	 * Get the GamePlayerType for this player, currently either PLAYER or SPECTATOR.
+	 * Default is PLAYER
+	 * @param type
+	 */
+	public void setGamePlayerType(GamePlayerType type){
+		this.gamePlayerType = type;
+	}
+	
+	/**
+	 * Set the GamePlayerType for this player, currently either PLAYER or SPECTATOR.
+	 * Default is PLAYER
+	 * @return GamePlayerType
+	 */
+	public GamePlayerType getGamePlayerType(){
+		return this.gamePlayerType;
 	}
 	
 	/**

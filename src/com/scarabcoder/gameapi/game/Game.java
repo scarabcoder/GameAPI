@@ -1,5 +1,6 @@
 package com.scarabcoder.gameapi.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -39,6 +40,8 @@ public class Game {
 		this.teamManager = new TeamManager();
 		this.playerManager = new PlayerManager();
 		this.messagePrefix = "";
+		this.areas = new ArrayList<Area>();
+		this.players = new ArrayList<GamePlayer>();
 		this.loop = new Runnable(){
 
 			@Override

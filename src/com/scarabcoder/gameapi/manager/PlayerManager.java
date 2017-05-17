@@ -14,16 +14,19 @@ public class PlayerManager {
 	/**
 	 * Get the GamePlayer given a Bukkit Player. GamePlayers are initiated once per server session, and are saved whether or not a player is online.
 	 * @param player
-	 * @return
+	 * @return GamePlayer, should never be null
 	 */
 	public static GamePlayer getGamePlayer(OfflinePlayer player){
+		GamePlayer pl = null;
 		if(playerMap.containsKey(player.getUniqueId())){
-			return playerMap.get(player);
+			pl = playerMap.get(player.getUniqueId());
 		}else{
 			GamePlayer gpl = new GamePlayer(player);
 			playerMap.put(player.getUniqueId(), gpl);
-			return gpl;
+			pl = gpl;
 		}
+		return pl;
 	}
+	
 	
 }

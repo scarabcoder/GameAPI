@@ -1,8 +1,16 @@
 package com.scarabcoder.gameapi.game;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
+
+import com.scarabcoder.gameapi.GameAPI;
 
 public class Arena {
 	
@@ -18,12 +26,15 @@ public class Arena {
 	
 	/**
 	 * Arena object, used in Game to define Arena world.
-	 * 
+	 * If the world exists as a folder in the server directory but isn't loaded, it will be loaded. If it doesn't exist as a folder and isn't laoded, one will be created.
 	 * @param id Unique Arena ID. Also used for world name.
 	 */
 	public Arena(String id){
 		this.settings = new ArenaSettings();
 		this.id = id;
+		if(Bukkit.getWorld(id) == null){
+			Bukkit.createWorld(new WorldCreator(id));
+		}
 		this.world = Bukkit.getWorld(id);
 		this.saveDefault();
 	}
@@ -68,28 +79,56 @@ public class Arena {
 	 * Set the spawn used for spectators spawning.
 	 * 
 	 */
-	public void setSpectatorSpawn(){
-		
+	public void setSpectatorSpawn(Location spectatorSpawn){
+		this.spectatorSpawn = spectatorSpawn;
 	}
 	
 	/**
 	 * Set the spawn used when the game status is waiting.
 	 */
-	public void setLobbySpawn(){
-		
+	public void setLobbySpawn(Location lobbySpawn){
+		this.lobbySpawn = lobbySpawn;
 	}
 	
 	/**
 	 * Saves current world as the default, used when resetting the world.
 	 */
 	public void saveDefault(){
-		
+		File worldFolder = world.getWorldFolder();
+		try {
+			File dest = new File(GameAPI.getGameWorldsFolder(), this.world.getName());
+			if(dest.exists()){
+				FileUtils.deleteDirectory(dest);
+			}
+			FileUtils.copyDirectory(worldFolder, new File(GameAPI.getGameWorldsFolder(), this.world.getName()));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Resets the world to saved default.
-	 * 
+	 * Players should NOT be in the world. As a precaution against world corruption, any players in the world are kicked from the server.
 	 */
 	public void resetWorld(){
+		GameAPI.sendDebugMessage("Resetting arena world " + this.getWorld().getName() + "!");
+		File worldFolder = world.getWorldFolder();
+		String worldName = world.getName();
+		for(Player player : this.getWorld().getPlayers()){
+			player.kickPlayer("World resetting...");
+		}
+		GameAPI.sendDebugMessage("Unloading world " + worldName + "...");
+		Bukkit.unloadWorld(worldName, false);
+		try {
+			GameAPI.sendDebugMessage("Deleting world " + worldName + "...");
+			FileUtils.deleteDirectory(worldFolder);
+			GameAPI.sendDebugMessage("Copying default world from GameWorlds/" + worldName + "...");
+			FileUtils.copyDirectory(new File(GameAPI.getGameWorldsFolder(), worldName), GameAPI.getGameWorldsFolder().getParentFile());
+			GameAPI.sendDebugMessage("Loading world " + worldName + " on server...");
+			Bukkit.createWorld(new WorldCreator(worldName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

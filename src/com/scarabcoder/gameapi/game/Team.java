@@ -31,6 +31,14 @@ public class Team {
 		
 	}
 	
+	public DyeColor getDyeColor(){
+		return this.color;
+	}
+	
+	public ChatColor getChatColor(){
+		return this.chatColor;
+	}
+	
 	public String getName(){
 		return this.name;
 	}

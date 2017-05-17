@@ -12,7 +12,8 @@ import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPistonEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -225,7 +226,16 @@ public class SettingsListener implements Listener{
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void pistonEvent(BlockPistonEvent e){
+	public void pistonExtend(BlockPistonExtendEvent e){
+		ArenaSettings settings = ArenaManager.getActiveSettings(e.getBlock().getLocation());
+		if(settings != null){
+			if(!settings.canPistons()) e.setCancelled(true);
+		}
+	}
+	
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void pistonRetract(BlockPistonRetractEvent e){
 		ArenaSettings settings = ArenaManager.getActiveSettings(e.getBlock().getLocation());
 		if(settings != null){
 			if(!settings.canPistons()) e.setCancelled(true);
@@ -250,7 +260,7 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void vehicleDestroy(VehicleDestroyEvent e){
 		ArenaSettings settings = ArenaManager.getActiveSettings(e.getVehicle().getLocation());
 		if(settings != null){
@@ -259,7 +269,7 @@ public class SettingsListener implements Listener{
 	}
 	
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void blockPlace(BlockPlaceEvent e){
 		ArenaSettings settings = ArenaManager.getActiveSettings(PlayerManager.getGamePlayer(e.getPlayer()));
 		if(settings != null){
@@ -267,7 +277,7 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void blockBreak(BlockBreakEvent e){
 		ArenaSettings settings = ArenaManager.getActiveSettings(PlayerManager.getGamePlayer(e.getPlayer()));
 		if(settings != null){
@@ -275,14 +285,29 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerDamagePlayer(EntityDamageByEntityEvent e){
 		if(e.getDamager() instanceof Player && e.getEntity() instanceof Player){
 			GamePlayer player = PlayerManager.getGamePlayer((Player) e.getEntity());
-			ArenaSettings settings = ArenaManager.getActiveSettings(player);
-			if(settings != null){
-				if(!settings.isCanPvP()) e.setCancelled(true);
+			GamePlayer damager = PlayerManager.getGamePlayer((Player) e.getDamager());
+			if(damager.isInGame()){
+				ArenaSettings settings = ArenaManager.getActiveSettings(damager);
+				if(settings != null){
+					if(!settings.isCanPvP()){
+						e.setCancelled(true);
+					}else{
+						if(player.isInGame()){
+							if(player.getGame().equals(damager.getGame())){
+								if(player.getTeam() != null && damager.getTeam() != null){
+									if(player.getTeam().equals(damager.getTeam()) && !player.getTeam().allowTeamDamage()) e.setCancelled(true);
+								}
+							}
+						}
+					}
+					
+				}
 			}
+			
 		}
 	}
 	
