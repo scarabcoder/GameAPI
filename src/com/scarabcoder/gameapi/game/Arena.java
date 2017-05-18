@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 
 import com.scarabcoder.gameapi.GameAPI;
@@ -126,9 +127,12 @@ public class Arena {
 			GameAPI.sendDebugMessage("Deleting world " + worldName + "...", GameAPI.getPlugin());
 			FileUtils.deleteDirectory(worldFolder);
 			GameAPI.sendDebugMessage("Copying default world from GameWorlds/" + worldName + "...", GameAPI.getPlugin());
-			FileUtils.copyDirectory(new File(GameAPI.getGameWorldsFolder(), worldName), GameAPI.getGameWorldsFolder().getParentFile());
+			FileUtils.copyDirectory(new File(GameAPI.getGameWorldsFolder(), worldName), new File(GameAPI.getGameWorldsFolder().getParentFile(), worldName));
 			GameAPI.sendDebugMessage("Loading world " + worldName + " on server...", GameAPI.getPlugin());
-			Bukkit.createWorld(new WorldCreator(worldName));
+			WorldCreator creator = new WorldCreator(worldName);
+			creator.generatorSettings("3;minecraft:air;127;");
+			creator.type(WorldType.FLAT);
+			this.world = Bukkit.createWorld(creator);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

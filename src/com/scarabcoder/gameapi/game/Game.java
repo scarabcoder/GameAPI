@@ -2,15 +2,14 @@ package com.scarabcoder.gameapi.game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
-import net.md_5.bungee.api.ChatColor;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.messaging.ChannelNotRegisteredException;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -23,6 +22,8 @@ import com.scarabcoder.gameapi.event.PlayerJoinGameEvent;
 import com.scarabcoder.gameapi.event.PlayerLeaveGameEvent;
 import com.scarabcoder.gameapi.manager.PlayerManager;
 import com.scarabcoder.gameapi.manager.TeamManager;
+
+import net.md_5.bungee.api.ChatColor;
 
 public class Game {
 	
@@ -89,7 +90,7 @@ public class Game {
 				if(game.isCountingDown()){
 					if(game.getCurrentCountdown() < game.getGameSettings().getCountdownTime()){
 						GameAPI.sendDebugMessage(game.getCurrentCountdown() % 10d + "", GameAPI.getPlugin());
-						if(game.getCurrentCountdown() % 10d == 0.0d){
+						if(game.getCurrentCountdown() % 10 == 0){
 							game.sendMessage(ChatColor.GREEN + "Game starts in " + ChatColor.DARK_GREEN + (game.getGameSettings().getCountdownTime() - game.getCurrentCountdown()) + ChatColor.GREEN + " seconds!");
 						}else if(game.getGameSettings().getCountdownTime() - game.getCurrentCountdown()  <= 5){
 							game.sendMessage(ChatColor.GREEN + "Game starts in " + ChatColor.DARK_GREEN + (game.getGameSettings().getCountdownTime() - game.getCurrentCountdown()) + ChatColor.GREEN + " seconds!");
@@ -264,14 +265,15 @@ public class Game {
 	 * End the game, kicking all players and resetting the arena.
 	 */
 	public void endGame(){
+		this.setGameStatus(GameStatus.RESTARTING);
 		GameEndEvent ev = new GameEndEvent(this);
 		Bukkit.getPluginManager().callEvent(ev);
-		Iterator<GamePlayer> pl = this.getPlayers().iterator();
-		while(pl.hasNext()){
-			GamePlayer player = pl.next();
-			this.removePlayer(player);
+		List<GamePlayer> players = new CopyOnWriteArrayList<GamePlayer>(this.getPlayers());
+		for(GamePlayer pl : players){
+			this.removePlayer(pl);
 		}
 		this.arena.resetWorld();
+		this.setGameStatus(GameStatus.WAITING);
 	}
 	
 	/**
@@ -344,8 +346,11 @@ public class Game {
 				out.writeUTF("Connect");
 				out.writeUTF(this.getGameSettings().getLobbyServer());
 		
-				
-				player.getOnlinePlayer().sendPluginMessage(GameAPI.getPlugin(), "BungeeCord", out.toByteArray());
+				try{
+					player.getOnlinePlayer().sendPluginMessage(GameAPI.getPlugin(), "BungeeCord", out.toByteArray());
+				} catch(ChannelNotRegisteredException e){
+					player.getOnlinePlayer().kickPlayer("Hub server not found, kicking instead.");
+				}
 			}else{
 				player.getOnlinePlayer().teleport(this.getGameSettings().getLobbyLocation());
 			}

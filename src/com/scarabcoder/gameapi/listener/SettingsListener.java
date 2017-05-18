@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 
 import com.scarabcoder.gameapi.game.ArenaSettings;
 import com.scarabcoder.gameapi.game.Game;
@@ -71,6 +72,14 @@ public class SettingsListener implements Listener{
 					}
 				}
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onWeatherChange(WeatherChangeEvent e){
+		ArenaSettings settings = ArenaManager.getActiveSettings(e.getWorld().getSpawnLocation());
+		if(settings != null){
+			if(!settings.isAllowWeatherChange()) e.setCancelled(true);
 		}
 	}
 	

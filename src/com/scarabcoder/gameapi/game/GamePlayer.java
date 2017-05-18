@@ -21,7 +21,9 @@ public class GamePlayer {
 	}
 	
 	
-	
+	public void setPlayer(OfflinePlayer player){
+		this.player = player;
+	}
 	
 	/**
 	 * Set the game this player is in. 
