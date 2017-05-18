@@ -10,6 +10,7 @@ import com.scarabcoder.gameapi.listener.PlayerJoinListener;
 import com.scarabcoder.gameapi.listener.PlayerMovementListener;
 import com.scarabcoder.gameapi.listener.PlayerPvPListener;
 import com.scarabcoder.gameapi.listener.PlayerQuitListener;
+import com.scarabcoder.gameapi.listener.ServerPingListener;
 import com.scarabcoder.gameapi.listener.SettingsListener;
 
 public class GameAPI extends JavaPlugin {

@@ -45,6 +45,7 @@ public class ArenaSettings {
 	private boolean allowBlockDrop;
 	private boolean allowTimeChange;
 	private boolean allowWeatherChange;
+	private boolean allowInventoryChange;
 	
 	private int priority;
 
@@ -136,6 +137,7 @@ public class ArenaSettings {
 		this.allowBlockDrop = true;
 		this.allowTimeChange = true;
 		this.allowWeatherChange = true;
+		this.setAllowInventoryChange(true);
 	}
 	
 	public boolean getAllowBlockDrop(){
@@ -480,6 +482,14 @@ public class ArenaSettings {
 
 	public void setAllowWeatherChange(boolean allowWeatherChange) {
 		this.allowWeatherChange = allowWeatherChange;
+	}
+
+	public boolean isAllowInventoryChange() {
+		return allowInventoryChange;
+	}
+
+	public void setAllowInventoryChange(boolean allowInventoryChange) {
+		this.allowInventoryChange = allowInventoryChange;
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.scarabcoder.gameapi.listener;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,6 +29,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -339,6 +341,15 @@ public class SettingsListener implements Listener{
 		ArenaSettings settings = ArenaManager.getActiveSettings(player);
 		if(settings != null){
 			e.setCancelled(!settings.isAllowDurabilityChange());
+		}
+	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e){
+		GamePlayer player = PlayerManager.getGamePlayer((OfflinePlayer) e.getWhoClicked());
+		ArenaSettings settings = ArenaManager.getActiveSettings(player);
+		if(settings != null){
+			if(!settings.isAllowInventoryChange()) e.setCancelled(true);
 		}
 	}
 	

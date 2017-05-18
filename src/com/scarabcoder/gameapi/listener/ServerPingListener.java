@@ -1,4 +1,4 @@
-package com.scarabcoder.gameapi;
+package com.scarabcoder.gameapi.listener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.event.EventHandler;
