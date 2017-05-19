@@ -29,6 +29,7 @@ public class GameAPI extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ServerPingListener(), this);
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		plugin = this;
 		
 		gameWorlds = new File("GameWorlds");

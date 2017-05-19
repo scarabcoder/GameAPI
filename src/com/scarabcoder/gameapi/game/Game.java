@@ -272,8 +272,16 @@ public class Game {
 		for(GamePlayer pl : players){
 			this.removePlayer(pl);
 		}
-		this.arena.resetWorld();
-		this.setGameStatus(GameStatus.WAITING);
+		Game game = this;
+		Bukkit.getScheduler().scheduleSyncDelayedTask(GameAPI.getPlugin(), new Runnable(){
+
+			@Override
+			public void run() {
+				game.arena.resetWorld();
+				game.setGameStatus(GameStatus.WAITING);
+			}
+			
+		}, 5L);
 	}
 	
 	/**

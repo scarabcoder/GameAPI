@@ -31,20 +31,20 @@ public class PlayerPvPListener implements Listener {
 				damager = PlayerManager.getGamePlayer((Player) e.getDamager());
 			}
 		}
-		if(player.isInGame() && damager.isInGame()){
-			if(
-					player != null && 
-					damager != null && 
-					!e.isCancelled() && 
-					player.getGame().equals(damager.getGame())){
-				if((player.getOnlinePlayer().getHealth() - e.getFinalDamage() <= 0)){
-					PlayerKillPlayerEvent ev = new PlayerKillPlayerEvent(damager, player, damager.getGame());
-					Bukkit.getPluginManager().callEvent(ev);
-					e.setCancelled(ev.isCancelled());
-				}else{
-					PlayerDamagePlayerEvent ev = new PlayerDamagePlayerEvent(damager, player, damager.getGame());
-					Bukkit.getPluginManager().callEvent(ev);
-					e.setCancelled(ev.isCancelled());
+		if(player != null && damager != null){
+			if(player.isInGame() && damager.isInGame()){
+				if(
+						!e.isCancelled() && 
+						player.getGame().equals(damager.getGame())){
+					if((player.getOnlinePlayer().getHealth() - e.getFinalDamage() <= 0)){
+						PlayerKillPlayerEvent ev = new PlayerKillPlayerEvent(damager, player, damager.getGame());
+						Bukkit.getPluginManager().callEvent(ev);
+						e.setCancelled(ev.isCancelled());
+					}else{
+						PlayerDamagePlayerEvent ev = new PlayerDamagePlayerEvent(damager, player, damager.getGame());
+						Bukkit.getPluginManager().callEvent(ev);
+						e.setCancelled(ev.isCancelled());
+					}
 				}
 			}
 		}
