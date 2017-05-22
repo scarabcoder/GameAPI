@@ -34,6 +34,14 @@ public class Team {
 		
 	}
 	
+	public void sendMessage(String msg){
+		for(GamePlayer player : this.getPlayers()){
+			if(player.isOnline()){
+				player.getOnlinePlayer().sendMessage("[" + this.getChatColor() + name + ChatColor.RESET + "] " + msg);
+			}
+		}
+	}
+	
 	public List<Location> getTeamSpawns(){
 		return this.teamSpawns;
 	}
@@ -85,6 +93,7 @@ public class Team {
 	 * @param p Player to remove.
 	 */
 	public void removePlayer(GamePlayer p){
+		p.setTeam(null);
 		players.remove(p);
 	}
 	

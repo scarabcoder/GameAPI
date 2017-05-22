@@ -16,6 +16,9 @@ public class PlayerQuitListener implements Listener {
 			if(player.getGame().getGameSettings().shouldLeavePlayerOnDisconnect()){
 				player.getGame().removePlayer(player);
 			}
+			if(player.getGame().getGameSettings().shouldDisableVanillaJoinLeaveMessages()){
+				e.setQuitMessage(null);
+			}
 		}
 	}
 	

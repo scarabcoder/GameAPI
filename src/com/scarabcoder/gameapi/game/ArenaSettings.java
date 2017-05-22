@@ -46,6 +46,7 @@ public class ArenaSettings {
 	private boolean allowTimeChange;
 	private boolean allowWeatherChange;
 	private boolean allowInventoryChange;
+	private boolean allowChat;
 	
 	private int priority;
 
@@ -138,6 +139,16 @@ public class ArenaSettings {
 		this.allowTimeChange = true;
 		this.allowWeatherChange = true;
 		this.setAllowInventoryChange(true);
+		this.allowChat = true;
+	}
+	
+	
+	public boolean allowChat(){
+		return this.allowChat;
+	}
+	
+	public void allowChat(boolean allow){
+		this.allowChat = allow;
 	}
 	
 	public boolean getAllowBlockDrop(){

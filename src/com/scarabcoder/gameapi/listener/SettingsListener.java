@@ -30,6 +30,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -74,6 +75,15 @@ public class SettingsListener implements Listener{
 					}
 				}
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onChat(AsyncPlayerChatEvent e){
+		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
+		ArenaSettings settings = ArenaManager.getActiveSettings(player);
+		if(settings != null){
+			if(!settings.allowChat()) e.setCancelled(true);
 		}
 	}
 	

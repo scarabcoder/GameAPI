@@ -17,6 +17,12 @@ public class TeamManager {
 		this.teams.add(team);
 	}
 	
+	public void registerTeams(Team...teams ){
+		for(Team team : teams){
+			this.teams.add(team);
+		}
+	}
+	
 	public List<Team> getTeams(){
 		return this.teams;
 	}

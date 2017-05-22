@@ -65,6 +65,9 @@ public class GamePlayer {
 	 * @param team Team to be set.
 	 */
 	protected void setTeam(Team team){
+		if(this.team != null){
+			this.team.removePlayer(this);
+		}
 		this.team = team;
 	}
 	

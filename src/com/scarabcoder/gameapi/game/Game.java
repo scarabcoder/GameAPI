@@ -16,6 +16,8 @@ import com.google.common.io.ByteStreams;
 import com.scarabcoder.gameapi.GameAPI;
 import com.scarabcoder.gameapi.enums.GamePlayerType;
 import com.scarabcoder.gameapi.enums.GameStatus;
+import com.scarabcoder.gameapi.enums.TeamSpreadType;
+import com.scarabcoder.gameapi.event.AutoTeamCompensationEvent;
 import com.scarabcoder.gameapi.event.GameEndEvent;
 import com.scarabcoder.gameapi.event.GameStartEvent;
 import com.scarabcoder.gameapi.event.PlayerJoinGameEvent;
@@ -295,7 +297,7 @@ public class Game {
 		if(teams.size() == 0) return null;
 		switch(this.getGameSettings().getTeamSpreadType()){
 		case EVEN:
-			int lowest = this.getGameSettings().getTeamSize();
+			int lowest = this.getGameSettings().getMaximumTeamSize();
 			Team lowestTeam = null;
 			for(Team team : teams){
 				if(team.getPlayers().size() <= lowest){
@@ -307,7 +309,7 @@ public class Game {
 			return lowestTeam;
 		case FIRST_AVAILABLE:
 			for(Team team : teams){
-				if(team.getPlayers().size() < this.getGameSettings().getTeamSize()){
+				if(team.getPlayers().size() < this.getGameSettings().getMaximumTeamSize()){
 					team.addPlayer(player);
 					return team;
 				}
@@ -363,6 +365,34 @@ public class Game {
 				player.getOnlinePlayer().teleport(this.getGameSettings().getLobbyLocation());
 			}
 		}
+		if(player.getTeam() != null && this.getGameSettings().shouldUseTeams()){
+			Team team = player.getTeam();
+			player.getTeam().removePlayer(player);
+			if(this.getTeamManager().getTeams().size() > 1 && 
+					this.getGameSettings().getAutomaticTeamSizeCompensationEnabled() && 
+					this.getGameSettings().getTeamSpreadType().equals(TeamSpreadType.EVEN)){
+				Team highestTeam = null;
+				for(Team t : this.getTeamManager().getTeams()){
+					if(team.getPlayers().size() - 1 < t.getPlayers().size() && t.getPlayers().size() > 0){
+						if(highestTeam != null){
+							if(t.getPlayers().size() > highestTeam.getPlayers().size()){
+								highestTeam = t;;
+							}
+						}else{
+							highestTeam = t;
+						}
+					}
+				}
+				if(highestTeam != null){
+					AutoTeamCompensationEvent ev = new AutoTeamCompensationEvent(highestTeam, team, highestTeam.getPlayers().get(0), this);
+					Bukkit.getPluginManager().callEvent(ev);
+					if(!ev.isCancelled())
+						highestTeam.getPlayers().get(0).setTeam(team);
+					
+				}
+			}
+		}
+		
 		player.setGame(null);
 		PlayerLeaveGameEvent ev = new PlayerLeaveGameEvent(player, this);
 		Bukkit.getPluginManager().callEvent(ev);
@@ -388,12 +418,22 @@ public class Game {
 	
 	/**
 	 * Send a game message. Messages are prefixed with the set message prefix (set/getMessagePrefix())
+	 * If you want to send without a prefix, use sendMessage(message, boolean usePrefix)
 	 * @param message Message to be sent.
 	 */
 	public void sendMessage(String message){
+		this.sendMessage(message, true);
+	}
+	
+	/**
+	 * Send a game message. Messages are prefixed with the set message prefix (set/getMessagePrefix())
+	 * If you want to send without a prefix, use sendMessage(message, boolean usePrefix)
+	 * @param message Message to be sent.
+	 */
+	public void sendMessage(String message, boolean usePrefix){
 		for(GamePlayer player : this.getPlayers()){
 			if(player.isOnline()){
-				player.getOnlinePlayer().sendMessage(messagePrefix + " " + message);
+				player.getOnlinePlayer().sendMessage((usePrefix ? messagePrefix + " " : "") + message);
 			}
 		}
 	}

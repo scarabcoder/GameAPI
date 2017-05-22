@@ -20,6 +20,9 @@ public class PlayerJoinListener implements Listener{
 				game.addPlayer(player);
 				break;
 			}
+			if(player.getGame().getGameSettings().shouldDisableVanillaJoinLeaveMessages()){
+				e.setJoinMessage(null);
+			}
 		}
 	}
 	

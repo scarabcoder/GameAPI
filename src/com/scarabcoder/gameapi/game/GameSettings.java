@@ -11,7 +11,6 @@ public class GameSettings {
 	private int minPlayers;
 	private int maxPlayers;
 	private int countdownTimer;
-	private int teamSize;
 	private boolean setMOTD;
 	private boolean setListPlayerCount;
 	private boolean enableBungee;
@@ -27,6 +26,10 @@ public class GameSettings {
 	private boolean automaticCountdown;
 	private int foodLevel;
 	private double healthLevel;
+	private int minTeamSize;
+	private int maxTeamSize;
+	private boolean autoTeamCompensation;
+	private boolean disableVanillaJoinLeaveMessages;
 	
 	public GameSettings(){
 		loadDefaults();
@@ -39,7 +42,6 @@ public class GameSettings {
 		this.minPlayers = 2;
 		this.maxPlayers = 8;
 		this.countdownTimer = 60;
-		this.teamSize = 1;
 		this.setMOTD = false;
 		this.setListPlayerCount = false;
 		this.limitAction = PlayerJoinLimitAction.DISALLOW;
@@ -52,6 +54,80 @@ public class GameSettings {
 		this.setAutomaticCountdown(true);
 		this.foodLevel = 20;
 		this.healthLevel = 20.0d;
+		this.minTeamSize = 1;
+		this.maxTeamSize = 4;
+		this.autoTeamCompensation = false;
+		this.disableVanillaJoinLeaveMessages = true;
+	}
+	
+	/**
+	 * Get whether or not teams should automatically be re-arranged if the team spread type is set to EVEN.
+	 * Auto compensation occurs when during the PlayerLeaveGameEvent.
+	 * Default: false
+	 * @return
+	 */
+	public boolean getAutomaticTeamSizeCompensationEnabled(){
+		return this.autoTeamCompensation;
+	}
+	
+	/**
+	 * Whether or not the vanilla "x joined the game/x left the game" messages should be disabled.
+	 * Default: true
+	 * @return
+	 */
+	public boolean shouldDisableVanillaJoinLeaveMessages(){
+		return this.disableVanillaJoinLeaveMessages;
+	}
+	
+	/**
+	 * Set whether or not the vanilla "x joined the game/x left the game" messages should be disabled.
+	 * Default: true
+	 * @return
+	 */
+	public void shouldDisableVanillaJoinLeaveMessages(boolean disable){
+		this.disableVanillaJoinLeaveMessages = disable;
+	}
+	
+	/**
+	 * Set whether or not teams should automatically be re-arranged if the team spread type is set to EVEN.
+	 * Auto compensation occurs when during the PlayerLeaveGameEvent.
+	 * Default: false
+	 * @return
+	 */
+	public void setAutomaticTeamSizeCompensationEnabled(boolean enable){
+		this.autoTeamCompensation = enable;
+	}
+	
+	/**
+	 * Get the minimum team size. Only used if teams are enabled.
+	 * @return Minimum team size.
+	 */
+	public int getMinimumTeamSize(){
+		return this.minTeamSize;
+	}
+	
+	/**
+	 * Set the minimum team size. Only used if teams are enabled.
+	 * @param minSize Minimum team size.
+	 */
+	public void setMinimumTeamSize(int minSize){
+		this.minTeamSize = minSize;
+	}
+	
+	/**
+	 * Get the maximum team size. Only used if teams are enabled.
+	 * @return Maximum team size.
+	 */
+	public int getMaximumTeamSize(){
+		return this.maxTeamSize;
+	}
+	
+	/**
+	 * Set the maximum team size. Only used if teams are enabled.
+	 * @param maxSize Maximum team size.
+	 */
+	public void setMaximumTeamSize(int maxSize){
+		this.maxTeamSize = maxSize;
 	}
 	
 	/**
@@ -262,13 +338,7 @@ public class GameSettings {
 		return this.limitAction ;
 	}
 	
-	/**
-	 * Get the maximum team size. Set to 1 to disable teams.
-	 * @return
-	 */
-	public int getTeamSize(){
-		return teamSize;
-	}
+	
 	
 	/**
 	 * When the minimum player count is met, it will start the countdown timer. 
@@ -296,13 +366,6 @@ public class GameSettings {
 		this.maxPlayers = max;
 	}
 	
-	/**
-	 * Get the maximum team size. Set to 1 to disable teams.
-	 * @param size
-	 */
-	public void setTeamSize(int size){
-		this.teamSize = size;
-	}
 	
 	/**
 	 * When the minimum player count is met, it will start the countdown timer. 
