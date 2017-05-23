@@ -287,7 +287,7 @@ public class Game {
 		for(GamePlayer pl : players){
 			this.removePlayer(pl);
 		}
-		Game game = this;
+		final Game game = this;
 		Bukkit.getScheduler().scheduleSyncDelayedTask(GameAPI.getPlugin(), new Runnable(){
 
 			@Override

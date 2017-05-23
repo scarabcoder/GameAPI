@@ -30,6 +30,7 @@ public class GameSettings {
 	private int maxTeamSize;
 	private boolean autoTeamCompensation;
 	private boolean disableVanillaJoinLeaveMessages;
+	private boolean displayVanillaDeathMessages;
 	
 	public GameSettings(){
 		loadDefaults();
@@ -59,6 +60,15 @@ public class GameSettings {
 		this.autoTeamCompensation = false;
 		this.disableVanillaJoinLeaveMessages = true;
 		this.enableBungee = false;
+		this.displayVanillaDeathMessages = true;
+	}
+	
+	public boolean shouldDisableVanillaDeathMessages(){
+		return this.displayVanillaDeathMessages;
+	}
+	
+	public void setDisplayVanillaDeathMessages(boolean display){
+		this.displayVanillaDeathMessages = display;
 	}
 	
 	/**

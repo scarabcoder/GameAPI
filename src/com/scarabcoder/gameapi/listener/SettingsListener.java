@@ -21,6 +21,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -29,7 +30,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
@@ -44,9 +44,9 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import com.scarabcoder.gameapi.game.ArenaSettings;
 import com.scarabcoder.gameapi.game.Game;
 import com.scarabcoder.gameapi.game.GamePlayer;
-import com.scarabcoder.gameapi.game.Team;
 import com.scarabcoder.gameapi.manager.ArenaManager;
 import com.scarabcoder.gameapi.manager.PlayerManager;
+import com.scarabcoder.gameapi.util.ScarabUtil;
 
 public class SettingsListener implements Listener{
 	
@@ -340,9 +340,10 @@ public class SettingsListener implements Listener{
 		GamePlayer player = PlayerManager.getGamePlayer(e.getEntity());
 		ArenaSettings settings = ArenaManager.getActiveSettings(player);
 		if(settings != null){
-			if(!settings.isKeepInventory()){
+			if(settings.isKeepInventory()){
 				e.setKeepInventory(true);
 			}
+			if(player.getGame().getGameSettings().shouldDisableVanillaDeathMessages()) e.setDeathMessage("");
 		}
 	}
 	
@@ -364,6 +365,7 @@ public class SettingsListener implements Listener{
 		}
 	}
 	
+	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerRespawn(PlayerRespawnEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
@@ -371,9 +373,7 @@ public class SettingsListener implements Listener{
 			Game game = player.getGame();
 			if(game.getGameSettings().shouldUseTeams()){
 				if(player.getTeam() != null){
-					for(Team team : game.getTeamManager().getTeams()){
-						player.getOnlinePlayer().teleport(team.getTeamSpawns().get(new Random().nextInt(team.getTeamSpawns().size())));
-					}
+					e.setRespawnLocation((player.getTeam().getTeamSpawns().get(new Random().nextInt(player.getTeam().getTeamSpawns().size()))));
 				}
 			}
 			
@@ -383,9 +383,9 @@ public class SettingsListener implements Listener{
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerDamagePlayer(EntityDamageByEntityEvent e){
-		if(e.getDamager() instanceof Player && e.getEntity() instanceof Player){
+		if(ScarabUtil.isPlayerDamager(e) && e.getEntity() instanceof Player){
 			GamePlayer player = PlayerManager.getGamePlayer((Player) e.getEntity());
-			GamePlayer damager = PlayerManager.getGamePlayer((Player) e.getDamager());
+			GamePlayer damager = ScarabUtil.getDamager(e);
 			if(damager.isInGame()){
 				ArenaSettings settings = ArenaManager.getActiveSettings(damager);
 				if(settings != null){
@@ -393,9 +393,9 @@ public class SettingsListener implements Listener{
 						e.setCancelled(true);
 					}else{
 						if(player.isInGame()){
-							if(player.getGame().equals(damager.getGame())){
+							if(player.getGame().getID().equals(damager.getGame().getID())){
 								if(player.getTeam() != null && damager.getTeam() != null){
-									if(player.getTeam().equals(damager.getTeam()) && !player.getTeam().allowTeamDamage()) e.setCancelled(true);
+									if(player.getTeam().getName().equals(damager.getTeam().getName()) && !player.getTeam().allowTeamDamage()) e.setCancelled(true);
 								}
 							}
 						}
