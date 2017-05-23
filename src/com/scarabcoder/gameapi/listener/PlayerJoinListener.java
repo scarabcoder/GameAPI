@@ -18,12 +18,13 @@ public class PlayerJoinListener implements Listener{
 		for(Game game : GameManager.getGames()){
 			if(game.getGameSettings().usesBungee()){
 				game.addPlayer(player);
+				if(player.getGame().getGameSettings().shouldDisableVanillaJoinLeaveMessages()){
+					e.setJoinMessage("");
+				}
 				break;
 			}
-			if(player.getGame().getGameSettings().shouldDisableVanillaJoinLeaveMessages()){
-				e.setJoinMessage(null);
-			}
 		}
+		
 	}
 	
 }

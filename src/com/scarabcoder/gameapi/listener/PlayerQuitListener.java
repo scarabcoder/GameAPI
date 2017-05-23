@@ -12,12 +12,12 @@ public class PlayerQuitListener implements Listener {
 	@EventHandler
 	public void playerQuit(PlayerQuitEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
-		if(player.isInGame()){
+		if(player.getGame() != null){
 			if(player.getGame().getGameSettings().shouldLeavePlayerOnDisconnect()){
 				player.getGame().removePlayer(player);
 			}
 			if(player.getGame().getGameSettings().shouldDisableVanillaJoinLeaveMessages()){
-				e.setQuitMessage(null);
+				e.setQuitMessage("");
 			}
 		}
 	}

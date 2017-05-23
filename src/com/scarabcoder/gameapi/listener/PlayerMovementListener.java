@@ -12,6 +12,7 @@ import com.scarabcoder.gameapi.event.PlayerLeaveAreaEvent;
 import com.scarabcoder.gameapi.game.Area;
 import com.scarabcoder.gameapi.game.GamePlayer;
 import com.scarabcoder.gameapi.manager.PlayerManager;
+import com.scarabcoder.gameapi.util.LocationUtil;
 
 public class PlayerMovementListener implements Listener {
 	
@@ -26,17 +27,10 @@ public class PlayerMovementListener implements Listener {
 				Location l2 = area.getLocation2();
 				boolean fromIsIn = false;
 				boolean toIsIn = false;
-				if(
-						(f.getX() > l1.getX() && f.getX() < l2.getX()) &&
-						(f.getY() > l1.getY() && f.getY() < l2.getY()) &&
-						(f.getZ() > l1.getZ() && f.getZ() < l2.getZ())){
+				if(LocationUtil.isInArea(f, l1, l2)){
 					fromIsIn = true;
 				}
-				if(
-						(t.getX() > l1.getX() && t.getX() < l2.getX()) &&
-						(t.getY() > l1.getY() && t.getY() < l2.getY()) &&
-						(t.getZ() > l1.getZ() && t.getZ() < l2.getZ())
-						){
+				if(LocationUtil.isInArea(t, l1, l2)){
 					toIsIn = true;
 				}
 				AreaEvent ev = null;

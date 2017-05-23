@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.scarabcoder.gameapi.listener.InventoryListener;
 import com.scarabcoder.gameapi.listener.PlayerJoinListener;
 import com.scarabcoder.gameapi.listener.PlayerMovementListener;
 import com.scarabcoder.gameapi.listener.PlayerPvPListener;
@@ -27,6 +28,7 @@ public class GameAPI extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new SettingsListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerPvPListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
+		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ServerPingListener(), this);
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

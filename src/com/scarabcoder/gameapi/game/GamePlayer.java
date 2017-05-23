@@ -65,10 +65,11 @@ public class GamePlayer {
 	 * @param team Team to be set.
 	 */
 	protected void setTeam(Team team){
-		if(this.team != null){
-			this.team.removePlayer(this);
-		}
+		Team oldTeam = this.team;
 		this.team = team;
+		if(oldTeam != null){
+			oldTeam.removePlayer(this);
+		}
 	}
 	
 	/**

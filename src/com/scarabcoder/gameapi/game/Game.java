@@ -220,6 +220,19 @@ public class Game {
 		this.areas.add(area);
 	}
 	
+	public void registerAreas(Area...areas){
+		for(Area area : areas){
+			this.registerArea(area);
+		}
+	}
+	
+	public Area getArea(String name){
+		for(Area area : this.areas){
+			if(area.getName().equals(name)) return area;
+		}
+		return null;
+	}
+	
 	/**
 	 * Get the plugin that registered this minigame.
 	 * @return Bukkit Plugin
@@ -335,6 +348,9 @@ public class Game {
 				player.getOnlinePlayer().setGameMode(this.getGameSettings().getMode());
 				player.getOnlinePlayer().setFoodLevel(this.getGameSettings().getFoodLevel());
 				player.getOnlinePlayer().setHealth(this.getGameSettings().getHealthLevel());
+				if(this.getArena().getLobbySpawn() != null){
+					player.getOnlinePlayer().teleport(this.getArena().getLobbySpawn());
+				}
 			}
 			this.setPlayerMode(GamePlayerType.PLAYER, player);
 			Bukkit.getPluginManager().callEvent(ev);
@@ -439,7 +455,7 @@ public class Game {
 	}
 	
 	/**
-	 * Set the message prefix. For example, "[Survival Games] "
+	 * Set the message prefix. For example, "[Survival Games]"
 	 * @param prefix Prefix to set.
 	 */
 	public void setMessagePrefix(String prefix){

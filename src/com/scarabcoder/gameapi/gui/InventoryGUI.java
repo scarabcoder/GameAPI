@@ -16,11 +16,11 @@ public class InventoryGUI {
 	private UUID id;
 	private HashMap<Integer, String> btns = new HashMap<Integer, String>();
 	
-	public InventoryGUI(String name){
+	public InventoryGUI(String title){
 		this.id = UUID.randomUUID();
 		GUIManager.registerGUI(this);
 		if(this.rowAmount == 0) this.rowAmount = 6;
-		this.inventory = Bukkit.createInventory(null, rowAmount * 6, name);
+		this.inventory = Bukkit.createInventory(null, rowAmount * 9, title);
 		
 	}
 	
@@ -35,8 +35,8 @@ public class InventoryGUI {
 		this.btns.put(slot, id);
 	}
 	
-	public InventoryGUI(String name, int rowAmount){
-		this(name);
+	public InventoryGUI(int rowAmount, String title){
+		this(title);
 		this.rowAmount = rowAmount;
 	}
 	

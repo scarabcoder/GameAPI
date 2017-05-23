@@ -58,6 +58,7 @@ public class GameSettings {
 		this.maxTeamSize = 4;
 		this.autoTeamCompensation = false;
 		this.disableVanillaJoinLeaveMessages = true;
+		this.enableBungee = false;
 	}
 	
 	/**

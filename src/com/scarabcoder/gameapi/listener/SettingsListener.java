@@ -29,6 +29,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
@@ -253,7 +254,7 @@ public class SettingsListener implements Listener{
 	public void allowMobSpawn(CreatureSpawnEvent e){
 		ArenaSettings settings = ArenaManager.getActiveSettings(e.getEntity().getLocation());
 		if(settings != null){
-			if(!settings.canMobSpawn()) e.setCancelled(true);
+			if(!settings.canMobSpawn() && e.getSpawnReason().equals(SpawnReason.NATURAL)) e.setCancelled(true);
 		}
 	}
 	
@@ -366,7 +367,7 @@ public class SettingsListener implements Listener{
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void playerRespawn(PlayerRespawnEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
-		if(player.isOnline()){
+		if(player.isOnline() && player.isInGame()){
 			Game game = player.getGame();
 			if(game.getGameSettings().shouldUseTeams()){
 				if(player.getTeam() != null){

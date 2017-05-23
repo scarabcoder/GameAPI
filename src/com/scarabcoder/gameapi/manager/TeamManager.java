@@ -22,6 +22,12 @@ public class TeamManager {
 			this.teams.add(team);
 		}
 	}
+	public Team getTeam(String name){
+		for(Team team : teams){
+			if(team.getName().equals(name)) return team;
+		}
+		return null;
+	}
 	
 	public List<Team> getTeams(){
 		return this.teams;

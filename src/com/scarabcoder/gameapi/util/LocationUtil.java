@@ -14,9 +14,9 @@ public class LocationUtil {
 		double y2 = Math.max(l1.getY(), l2.getY());
 		double z2 = Math.max(l1.getZ(), l2.getZ());
 		
-		if(l.getX() > x1 && l.getX() < x2 &&
-				l.getY() > y1 && l.getY() < y2 &&
-				l.getZ() > z1 && l.getZ() < z2){
+		if(l.getX() >= x1 && l.getX() <= x2 &&
+				l.getY() >= y1 && l.getY() <= y2 &&
+				l.getZ() >= z1 && l.getZ() <= z2){
 			return true;
 		}
 		

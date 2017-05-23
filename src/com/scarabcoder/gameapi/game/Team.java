@@ -4,29 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
-
-import com.scarabcoder.gameapi.util.ColorUtil;
 
 public class Team {
 	
-	private List<GamePlayer> players;
+	private List<GamePlayer> players = new ArrayList<GamePlayer>();
 	
 	private boolean allowTeamDamage = false;
 	private String name;
-	private DyeColor color;
+	private Color color;
 	private ChatColor chatColor;
 	private List<Location> teamSpawns;
 	
-	public Team(DyeColor color, String name){
-		this.color = color;
-		this.name = name;
-		this.chatColor = ColorUtil.dyeColorToChatColor(color);
-		this.teamSpawns = new ArrayList<Location>();
-	}
 	
-	public Team(DyeColor dyeColor, ChatColor chatColor, String name){
+	public Team(Color dyeColor, ChatColor chatColor, String name){
 		this.color = dyeColor;
 		this.name = name;
 		this.chatColor = chatColor;
@@ -50,7 +42,7 @@ public class Team {
 		this.teamSpawns.add(location);
 	}
 	
-	public DyeColor getDyeColor(){
+	public Color getColor(){
 		return this.color;
 	}
 	

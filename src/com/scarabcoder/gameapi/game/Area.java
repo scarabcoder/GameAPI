@@ -44,6 +44,17 @@ public class Area {
 		this.useSettings = false;
 	}
 	
+	public Location getCenter(){
+		return getCenter(true);
+	}
+	
+	public Location getCenter(boolean withY){
+		double x = loc1.getX() + 0.5 + (loc2.getX() - loc1.getX()) / 2;
+		double y = (withY ? loc1.getY() + (loc2.getY() - loc1.getY()) / 2 : loc1.getY());
+		double z = loc1.getZ() + 0.5 + (loc2.getZ() - loc1.getZ()) / 2;
+		return new Location(loc1.getWorld(), x, y, z);
+	}
+	
 	public boolean useSettings(){
 		return this.useSettings;
 	}
