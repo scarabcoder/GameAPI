@@ -1,6 +1,7 @@
 package com.scarabcoder.gameapi.game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +25,7 @@ import com.scarabcoder.gameapi.event.PlayerJoinGameEvent;
 import com.scarabcoder.gameapi.event.PlayerLeaveGameEvent;
 import com.scarabcoder.gameapi.manager.PlayerManager;
 import com.scarabcoder.gameapi.manager.TeamManager;
+import com.scarabcoder.gameapi.util.ScarabUtil;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -50,6 +52,8 @@ public class Game {
 	private List<Area> areas;
 	
 	private List<GamePlayer> players;
+	
+	private HashMap<GamePlayer, Integer> kills = new HashMap<GamePlayer, Integer>();
 	
 	private List<Location> spawns;
 	
@@ -114,6 +118,14 @@ public class Game {
 			}
 			
 		}, 0L, 20L);
+	}
+	
+	public int getKills(GamePlayer p){
+		return this.kills.get(p);
+	}
+	
+	public void increaseKills(GamePlayer p, int amount){
+		this.kills.put(p, this.getKills(p) + amount);
 	}
 	
 	public boolean isMinimumPlayersFilled(){
@@ -284,19 +296,22 @@ public class Game {
 		GameEndEvent ev = new GameEndEvent(this);
 		Bukkit.getPluginManager().callEvent(ev);
 		List<GamePlayer> players = new CopyOnWriteArrayList<GamePlayer>(this.getPlayers());
+		this.playerModes = new HashMap<GamePlayer, GamePlayerType>();
 		for(GamePlayer pl : players){
 			this.removePlayer(pl);
 		}
-		final Game game = this;
-		Bukkit.getScheduler().scheduleSyncDelayedTask(GameAPI.getPlugin(), new Runnable(){
-
-			@Override
-			public void run() {
-				game.arena.resetWorld();
-				game.setGameStatus(GameStatus.WAITING);
-			}
-			
-		}, 5L);
+		this.setGameStatus(GameStatus.WAITING);
+		if(this.getGameSettings().shouldResetWorlds()){
+			final Game game = this;
+			Bukkit.getScheduler().scheduleSyncDelayedTask(GameAPI.getPlugin(), new Runnable(){
+	
+				@Override
+				public void run() {
+					game.arena.resetWorld();
+				}
+				
+			}, 5L);
+		}
 	}
 	
 	/**
@@ -334,6 +349,12 @@ public class Game {
 		}
 	}
 	
+	public List<GamePlayer> getPlayersSortedByKills(){
+		List<GamePlayer> pls = this.players;
+		Collections.sort(pls, (p1, p2) -> this.getKills(p1) > this.getKills(p2) ? 0 : 1);
+		return pls;
+	}
+	
 	/**
 	 * Add a player to the game. You must handle teleporting. Teams are not set here, use addToTeam(GamePlayer, [Team]).
 	 * Player will not be added if already part of the game. The GameMode set in GameSettings.getGameMode() will be applied here.
@@ -341,6 +362,7 @@ public class Game {
 	 */
 	public void addPlayer(GamePlayer player){
 		if(!this.players.contains(player)){
+			this.kills.put(player, 0);
 			PlayerJoinGameEvent ev = new PlayerJoinGameEvent(player, this);
 			this.players.add(player);
 			player.setGame(this);
@@ -352,8 +374,8 @@ public class Game {
 					player.getOnlinePlayer().teleport(this.getArena().getLobbySpawn());
 				}
 			}
-			this.setPlayerMode(GamePlayerType.PLAYER, player);
 			Bukkit.getPluginManager().callEvent(ev);
+			this.setPlayerMode(ev.getGamePlayerType(), player);
 			
 		}
 	}
@@ -452,6 +474,11 @@ public class Game {
 				player.getOnlinePlayer().sendMessage((usePrefix ? messagePrefix + " " : "") + message);
 			}
 		}
+	}
+	
+	public void sendMessage(String message, boolean usePrefix, boolean centered){
+		if(centered) message = ScarabUtil.getCenteredMessage(message);
+		sendMessage(message, usePrefix);
 	}
 	
 	/**

@@ -31,6 +31,7 @@ public class GameSettings {
 	private boolean autoTeamCompensation;
 	private boolean disableVanillaJoinLeaveMessages;
 	private boolean displayVanillaDeathMessages;
+	private boolean resetWorlds;
 	
 	public GameSettings(){
 		loadDefaults();
@@ -61,13 +62,22 @@ public class GameSettings {
 		this.disableVanillaJoinLeaveMessages = true;
 		this.enableBungee = false;
 		this.displayVanillaDeathMessages = true;
+		this.resetWorlds = false;
+	}
+	
+	public boolean shouldResetWorlds(){
+		return this.resetWorlds;
+	}
+	
+	public void setResetWorlds(boolean reset){
+		this.resetWorlds = reset;
 	}
 	
 	public boolean shouldDisableVanillaDeathMessages(){
 		return this.displayVanillaDeathMessages;
 	}
 	
-	public void setDisplayVanillaDeathMessages(boolean display){
+	public void setDisableVanillaDeathMessages(boolean display){
 		this.displayVanillaDeathMessages = display;
 	}
 	

@@ -20,7 +20,7 @@ public class InventoryListener implements Listener {
 			InventoryGUI gui = GUIManager.getGUI(e.getClickedInventory());
 			if(gui.isButton(e.getSlot())){
 				GamePlayer p = PlayerManager.getGamePlayer((OfflinePlayer) e.getWhoClicked());
-				InventoryButtonClickEvent ev = new InventoryButtonClickEvent(gui, p, gui.getButtonID(e.getSlot()));
+				InventoryButtonClickEvent ev = new InventoryButtonClickEvent(gui, p, gui.getButtonID(e.getSlot()), e.getCurrentItem());
 				Bukkit.getPluginManager().callEvent(ev);
 			}
 		}

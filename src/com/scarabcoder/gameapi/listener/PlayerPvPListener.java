@@ -39,7 +39,11 @@ public class PlayerPvPListener implements Listener {
 					if((player.getOnlinePlayer().getHealth() - e.getFinalDamage() <= 0)){
 						PlayerKillPlayerEvent ev = new PlayerKillPlayerEvent(damager, player, damager.getGame());
 						Bukkit.getPluginManager().callEvent(ev);
-						e.setCancelled(ev.isCancelled());
+						if(!ev.isCancelled()){
+							damager.getGame().increaseKills(damager, 1);
+						}else{
+							e.setCancelled(true);
+						}
 					}else{
 						PlayerDamagePlayerEvent ev = new PlayerDamagePlayerEvent(damager, player, damager.getGame());
 						Bukkit.getPluginManager().callEvent(ev);

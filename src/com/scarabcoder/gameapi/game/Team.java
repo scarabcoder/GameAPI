@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 
+import com.scarabcoder.gameapi.enums.GamePlayerType;
+
 public class Team {
 	
 	private List<GamePlayer> players = new ArrayList<GamePlayer>();
@@ -24,6 +26,16 @@ public class Team {
 		this.chatColor = chatColor;
 		this.teamSpawns = new ArrayList<Location>();
 		
+	}
+	
+	public List<GamePlayer> getPlayersByMode(GamePlayerType type){
+		List<GamePlayer> ps = new ArrayList<GamePlayer>();
+		for(GamePlayer p : this.players){
+			if(p.getGame().getGamePlayerType(p).equals(type)){
+				ps.add(p);
+			}
+		}
+		return ps;
 	}
 	
 	public void sendMessage(String msg){

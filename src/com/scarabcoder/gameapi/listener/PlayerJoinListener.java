@@ -15,14 +15,19 @@ public class PlayerJoinListener implements Listener{
 	public void playerJoin(PlayerJoinEvent e){
 		GamePlayer player = PlayerManager.getGamePlayer(e.getPlayer());
 		player.setPlayer(e.getPlayer());
+		
 		for(Game game : GameManager.getGames()){
+			
+			
 			if(game.getGameSettings().usesBungee()){
+				
 				game.addPlayer(player);
-				if(player.getGame().getGameSettings().shouldDisableVanillaJoinLeaveMessages()){
-					e.setJoinMessage("");
-				}
+				
 				break;
 			}
+		}
+		if(player.getGame().getGameSettings().shouldDisableVanillaJoinLeaveMessages()){
+			e.setJoinMessage("");
 		}
 		
 	}
