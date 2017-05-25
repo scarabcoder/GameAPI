@@ -1,4 +1,4 @@
-## Latest: Release 0.1.0
+# Latest: Release 0.1.0
 ## Beta: indev 0.1.0
  
  GameAPI is a plugin-library used for Spigot plugins. Simply put, you no longer have to code common things in minigames like teams or arena management. It allows the developer to concentrate on the minigame itself, with some extra utilities not included in the Spigot API.
