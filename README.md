@@ -1,3 +1,6 @@
+# This API is abandoned
+If it wasn't already obvious from the inactivity for 4+ years, this project is abandoned for now. I may remake it in Kotlin, along with some other projects, so stay tuned. 
+
 # Latest: Release 0.1.0
 ## Beta: indev 0.1.0
  
